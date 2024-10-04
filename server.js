@@ -1,4 +1,7 @@
 import WebSocket, { WebSocketServer } from "ws";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const wss = new WebSocketServer({ port: 8080 });
 
@@ -15,14 +18,11 @@ wss.on("connection", function connection(ws, req) {
 
 	// broadcasting to every other connected WebSocket clients, excluding itself
 	ws.on("message", function message(data) {
-		console.log(
-			"broadcasting message:",
-			JSON.parse(data.toString()).message,
-		);
+		console.log("broadcasting message:", JSON.parse(data.toString()));
 
 		wss.clients.forEach(function each(client) {
 			if (client !== ws && client.readyState === WebSocket.OPEN) {
-				client.send(JSON.parse(data.toString()).message);
+				client.send(JSON.parse(data.toString()));
 			}
 		});
 	});
