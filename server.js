@@ -22,7 +22,7 @@ wss.on("connection", function connection(ws, req) {
 
 		wss.clients.forEach(function each(client) {
 			if (client !== ws && client.readyState === WebSocket.OPEN) {
-				client.send(JSON.parse(data.toString()));
+				client.send(data.toString());
 			}
 		});
 	});
