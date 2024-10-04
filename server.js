@@ -16,7 +16,19 @@ wss.on("connection", function connection(ws, req) {
 
 	console.log("Client connected with channel ID:", req.headers.channel);
 
-	// broadcasting to every other connected WebSocket clients, excluding itself
+	// send new joining message to every other connected clients, excluding itself
+	wss.clients.forEach(function each(client) {
+		if (client !== ws && client.readyState === WebSocket.OPEN) {
+			client.send(
+				JSON.stringify({
+					channel: "general",
+					message: "A new user has joined the channel",
+				}),
+			);
+		}
+	});
+
+	// when a message is received, broadcasting to every other connected WebSocket clients, excluding itself
 	ws.on("message", function message(data) {
 		console.log("broadcasting message:", JSON.parse(data.toString()));
 
